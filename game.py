@@ -10,7 +10,7 @@ resolution = (width,height)
 white = (255,255,255)
 black = (  0,  0,  0)
 
-FPS = 10 # frames per second setting
+FPS = 60 # frames per second setting
 fpsClock = pygame.time.Clock()
 
 ball = pygame.image.load('ball.png')
