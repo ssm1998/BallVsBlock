@@ -40,6 +40,7 @@ class Blocks:
         self.numBlocks = numBlocks
 
     def generate(self):
+        self.posList = []
         self.tempList = []
         self.blockPos = [(0,0),(width/10,0),((2*width)/10,0),((3*width)/10,0),((4*width)/10,0),
           ((5*width)/10,0),((6*width)/10,0),((7*width)/10,0),((8*width)/10,0),((9*width)/10,0)]
@@ -63,6 +64,7 @@ class Blocks:
     
     def checkStuff(self):
         print self.tempList
+        print self.posList
 
 while True:
     game_display.fill(white)
