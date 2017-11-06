@@ -1,18 +1,23 @@
-import pygame, sys, random
+import pygame, sys, random, time
 from pygame.locals import *
 
 pygame.init()
 
-height = 800
+#Constants
+height = 600
 width = 600
 resolution = (width,height)
+blockPos = [(x*(width/10),0) for x in range(10)]
 
+#Colors
 white = (255,255,255)
 black = (  0,  0,  0)
 
-FPS = 60 # frames per second setting
+#Time Frame
+FPS = 10 # frames per second setting
 fpsClock = pygame.time.Clock()
 
+#Loading images
 ball = pygame.image.load('ball.png')
 block = pygame.image.load('block.png')
 
@@ -25,8 +30,17 @@ block.set_colorkey(block.get_at((0,0)), RLEACCEL)
 game_display = pygame.display.set_mode(resolution)
 pygame.display.set_caption('Ball Vs Block')
 game_display.fill(white)
-game_display.blit(ball, (width/2,height/2))
 pygame.display.flip()
+
+class Balls:
+    
+    numBalls = 0
+
+    def add(self,numBalls):
+        obj = game_display.blit(ball, pygame.mouse.get_pos())
+        for var in range(numBalls):
+            game_display.blit(ball, obj.midleft)
+            obj = game_display.blit(ball, obj.midleft)
 
 class Blocks:
     
@@ -36,53 +50,47 @@ class Blocks:
     tempList = []
     gen = 0
 
-    def __init__(self,numBlocks):
+    def generate(self,numBlocks):
         self.numBlocks = numBlocks
-
-    def generate(self):
         self.posList = []
         self.tempList = []
-        self.blockPos = [(0,0),(width/10,0),((2*width)/10,0),((3*width)/10,0),((4*width)/10,0),
-          ((5*width)/10,0),((6*width)/10,0),((7*width)/10,0),((8*width)/10,0),((9*width)/10,0)]
         while len(self.tempList) <= self.numBlocks:
             self.gen = random.randint(0,9)
             if self.gen not in self.tempList:
                 self.tempList.append(self.gen)
 
         for var in self.tempList:
-            self.posList.append(self.blockPos[var])
-
-    def drawBlocks(self):
-        pygame.display.flip()
+            self.posList.append(blockPos[var])
+        
         for pos in self.posList:
             game_display.blit(block,pos)
-    
+        
     def increaseY(self):
         if self.posList[0][1] < height:
+            print "working"
             for var in range(len(self.posList)):
                 self.posList[var] = (self.posList[var][0],self.posList[var][1]+(2*height/10))
+            for pos in self.posList:
+                game_display.blit(block,pos)
+        else:
+            self.generate(random.randint(1,8))
     
     def checkStuff(self):
         print self.tempList
         print self.posList
 
-while True:
-    game_display.fill(white)
-    game_display.blit(ball, pygame.mouse.get_pos())
-    x = random.randint(1,8)
-    print x
-    b1 = Blocks(x)
-    b1.generate()
-    b1.drawBlocks()
-    b1.increaseY()
-    b1.checkStuff()
-    if b1.posList[0][1] < height:
-        print "Deleted"
-        del b1
+b1 = Blocks()
+b1.generate(random.randint(1,8))
+ba1 = Balls()
 
+while True: #Main game loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+    game_display.fill(white)
+    ba1.add(4)
+    b1.increaseY()
+    b1.checkStuff()
     pygame.display.flip()
     fpsClock.tick(FPS)
