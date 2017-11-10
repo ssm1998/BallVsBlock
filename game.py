@@ -79,6 +79,7 @@ class Blocks:
         print self.tempList
         print self.posList
 
+#Objects
 b1 = Blocks()
 b1.generate(random.randint(1,8))
 ba1 = Balls()
